@@ -21,11 +21,15 @@ public class ComponentFactory {
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static ComponentFactory instance;
-    //trebuie sa il faci SINGLETON!!!
+    private static volatile ComponentFactory instance;
+
     public static ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
-        if(instance == null){
-            instance = new ComponentFactory(componentsForTest, primaryStage);
+        if(instance == null) {
+            synchronized (ComponentFactory.class) {
+                if (instance == null) {
+                    instance = new ComponentFactory(componentsForTest, primaryStage);
+                }
+            }
         }
         return instance;
     }

@@ -1,8 +1,10 @@
 import database.DatabaseConnectionFactory;
 import model.Book;
 import model.builder.BookBuilder;
-import repository.BookRepository;
-import repository.BookRepositoryMySQL;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryCacheDecorator;
+import repository.book.BookRepositoryMySQL;
+import repository.book.Cache;
 import service.BookService;
 import service.BookServiceImpl;
 
@@ -21,7 +23,7 @@ public class Main {
         System.out.println(book);
 
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-        BookRepository bookRepository = new BookRepositoryMySQL(connection);
+        BookRepository bookRepository = new BookRepositoryCacheDecorator(new BookRepositoryMySQL(connection), new Cache<>());
         BookService bookService = new BookServiceImpl(bookRepository);
 
         bookService.save(book);

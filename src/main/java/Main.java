@@ -5,8 +5,8 @@ import repository.book.BookRepository;
 import repository.book.BookRepositoryCacheDecorator;
 import repository.book.BookRepositoryMySQL;
 import repository.book.Cache;
-import service.BookService;
-import service.BookServiceImpl;
+import service.book.BookService;
+import service.book.BookServiceImpl;
 
 import java.sql.Connection;
 import java.time.LocalDate;

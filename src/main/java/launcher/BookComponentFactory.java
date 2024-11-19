@@ -4,37 +4,36 @@ import controller.BookController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.BookMapper;
-import model.Book;
-import repository.BookRepository;
-import repository.BookRepositoryMySQL;
-import service.BookService;
-import service.BookServiceImpl;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryMySQL;
+import service.book.BookService;
+import service.book.BookServiceImpl;
 import view.BookView;
 import view.model.BookDTO;
 
 import java.sql.Connection;
 import java.util.List;
 
-public class ComponentFactory {
+public class BookComponentFactory {
 
     private final BookView bookView;
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static volatile ComponentFactory instance;
+    private static volatile BookComponentFactory instance;
 
-    public static ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
+    public static BookComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
         if(instance == null) {
-            synchronized (ComponentFactory.class) {
+            synchronized (BookComponentFactory.class) {
                 if (instance == null) {
-                    instance = new ComponentFactory(componentsForTest, primaryStage);
+                    instance = new BookComponentFactory(componentsForTest, primaryStage);
                 }
             }
         }
         return instance;
     }
 
-    public ComponentFactory(Boolean componentsForTest, Stage primaryStage){
+    public BookComponentFactory(Boolean componentsForTest, Stage primaryStage){
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository = new BookRepositoryMySQL(connection);
         this.bookService = new BookServiceImpl(bookRepository);
@@ -59,4 +58,5 @@ public class ComponentFactory {
     public BookService getBookService() {
         return bookService;
     }
+
 }

@@ -2,17 +2,21 @@ package model.builder;
 
 import model.Order;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class OrderBuilder {
     private Order order;
+
+    public OrderBuilder(){
+        order = new Order();
+    }
 
     public OrderBuilder setId(Long id){
         order.setId(id);
         return this;
     }
 
-    public OrderBuilder setTimestamp(LocalDateTime timestamp){
+    public OrderBuilder setTimestamp(LocalDate timestamp){
         order.setTimestamp(timestamp);
         return this;
     }

@@ -55,13 +55,15 @@ public class BookRepositoryMySQL implements BookRepository{
     @Override
     public boolean save(Book book) {
 
-        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?);";
+        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?, ?, ?);";
 
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(newSql);
             preparedStatement.setString(1, book.getAuthor());
             preparedStatement.setString(2, book.getTitle());
             preparedStatement.setDate(3, java.sql.Date.valueOf(book.getPublishedDate()));
+            preparedStatement.setFloat(4, book.getPrice());
+            preparedStatement.setInt(5, book.getStock());
 
             int rowsInserted = preparedStatement.executeUpdate();
 
@@ -91,6 +93,26 @@ public class BookRepositoryMySQL implements BookRepository{
         return true;
     }
 
+    public boolean update(Book book){
+        String newSql = "UPDATE book SET title = ?, author = ?, price = ?, stock = ? WHERE title = ? AND author = ?;";
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(newSql);
+            preparedStatement.setString(1, book.getTitle());
+            preparedStatement.setString(2, book.getAuthor());
+            preparedStatement.setFloat(3, book.getPrice());
+            preparedStatement.setInt(4, book.getStock());
+            preparedStatement.setString(5, book.getTitle());
+            preparedStatement.setString(6, book.getAuthor());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public void removeAll() {
         String sql = "DELETE FROM book WHERE id >= 0;";
@@ -108,6 +130,8 @@ public class BookRepositoryMySQL implements BookRepository{
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
                 .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
+                .setPrice(resultSet.getFloat("price"))
+                .setStock(resultSet.getInt("stock"))
                 .build();
     }
 }

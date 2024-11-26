@@ -36,6 +36,10 @@ public class BookServiceImpl implements BookService {
         return bookRepository.delete(book);
     }
 
+    public boolean update(Book book){
+        return bookRepository.update(book);
+    }
+
     @Override
     public int getAgeOfBook(Long id) {
         Book book = this.findById(id);

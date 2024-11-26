@@ -1,10 +1,10 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Order {
     private Long id;
-    private LocalDateTime timestamp;
+    private LocalDate timestamp;
     private Long employeeId;
     private String title;
     private String author;
@@ -19,11 +19,11 @@ public class Order {
         this.id = id;
     }
 
-    public LocalDateTime getTimestamp() {
+    public LocalDate getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(LocalDate timestamp) {
         this.timestamp = timestamp;
     }
 

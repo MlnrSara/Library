@@ -28,17 +28,18 @@ public class LoginController {
     private class LoginButtonListener implements EventHandler<ActionEvent> {
 
         @Override
-        public void handle(javafx.event.ActionEvent event) {
+        public void handle(ActionEvent event) {
             String username = loginView.getUsername();
             String password = loginView.getPassword();
 
             Notification<User> loginNotification = authenticationService.login(username, password);
+            Long userId = loginNotification.getResult().getId();
 
             if (loginNotification.hasError()){
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successful!");
-                BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage(), userId);
             }
         }
     }

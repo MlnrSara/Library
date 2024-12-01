@@ -4,10 +4,14 @@ import controller.AdminController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.UserMapper;
+import repository.report.ReportRepository;
+import repository.report.ReportRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
+import service.report.ReportService;
+import service.report.ReportServiceImpl;
 import service.user.EmployeeService;
 import service.user.EmployeeServiceMySQL;
 import view.AdminView;
@@ -23,6 +27,8 @@ public class AdminComponentFactory {
     private final UserRepository userRepository;
     private final RightsRolesRepository rightsRolesRepository;
     private final EmployeeService employeeService;
+    private final ReportRepository reportRepository;
+    private final ReportService reportService;
     private static volatile AdminComponentFactory instance;
 
     public static AdminComponentFactory getInstance(Boolean componentForTest, Stage primaryStage){
@@ -41,10 +47,12 @@ public class AdminComponentFactory {
         this.rightsRolesRepository = new RightsRolesRepositoryMySQL(connection);
         this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
         this.employeeService = new EmployeeServiceMySQL(userRepository, rightsRolesRepository);
+        this.reportRepository = new ReportRepositoryMySQL(connection);
+        this.reportService = new ReportServiceImpl(reportRepository);
 
         List<UserDTO> userDTOs = UserMapper.convertUserListToUserDTOList(employeeService.findAllEmployees());
         this.adminView = new AdminView(primaryStage, userDTOs);
-        this.adminController = new AdminController(adminView, employeeService);
+        this.adminController = new AdminController(adminView, employeeService, reportService);
 
     }
 }

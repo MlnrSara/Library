@@ -6,6 +6,7 @@ import model.Role;
 import model.builder.UserBuilder;
 import model.validator.Notification;
 import model.validator.ResultFetchException;
+import service.report.ReportService;
 import service.user.EmployeeService;
 import view.AdminView;
 import view.model.UserDTO;
@@ -21,9 +22,12 @@ public class AdminController {
 
     private final AdminView adminView;
 
-    public AdminController(AdminView adminView, EmployeeService employeeService) {
+    private final ReportService reportService;
+
+    public AdminController(AdminView adminView, EmployeeService employeeService, ReportService reportService) {
         this.employeeService = employeeService;
         this.adminView = adminView;
+        this.reportService = reportService;
 
         this.adminView.addAddButtonListener(new AddButtonListener());
         this.adminView.addReportButtonListener(new ReportButtonListener());
@@ -57,7 +61,19 @@ public class AdminController {
 
         @Override
         public void handle(ActionEvent event) {
+            UserDTO userDTO = (UserDTO) adminView.getEmployeesTableView().getSelectionModel().getSelectedItem();
+            if(userDTO==null){
+                //we generate the full report for all employees
+                boolean success = reportService.generateFullPDFReport();
+                if(success){
+                    adminView.addDisplayAlertMessage("Report Generated Successfully", "Finished generating the report", "You can find the report in the project files.");
+                } else {
+                    adminView.addDisplayAlertMessage("Report Generation Fail", "The report did not generate properly", "Something went wrong while generating the report. Please try again.");
+                }
+            } else {
+                //we generate a report for just the selected employee
 
+            }
         }
     }
 }

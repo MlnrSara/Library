@@ -1,5 +1,11 @@
 package service.user;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import model.Role;
 import model.User;
 import model.builder.UserBuilder;
@@ -8,12 +14,14 @@ import model.validator.UserValidator;
 import repository.security.RightsRolesRepository;
 import repository.user.UserRepository;
 
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static database.Constants.Roles.EMPLOYEE;
 
@@ -83,4 +91,6 @@ public class EmployeeServiceMySQL implements EmployeeService{
             throw new RuntimeException(ex);
         }
     }
+
+
 }

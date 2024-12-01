@@ -47,6 +47,11 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
         return decoratedBookRepository.delete(book);
     }
 
+    public boolean update(Book book){
+        cache.invalidateCache();
+        return decoratedBookRepository.update(book);
+    }
+
     @Override
     public void removeAll() {
         cache.invalidateCache();

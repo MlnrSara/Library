@@ -6,6 +6,7 @@ import static database.Constants.Tables.ROLE;
 import static database.Constants.Tables.ROLE_RIGHT;
 import static database.Constants.Tables.USER;
 import static database.Constants.Tables.USER_ROLE;
+import static database.Constants.Tables.ORDER;
 
 public class SQLTableCreationFactory {
     public String getCreateSQLForTable(String table) {
@@ -15,6 +16,8 @@ public class SQLTableCreationFactory {
                     "  author varchar(500) NOT NULL," +
                     "  title varchar(500) NOT NULL," +
                     "  publishedDate datetime DEFAULT NULL," +
+                    "  price float(5,2) NOT NULL," +
+                    "  stock INT Not NULL," +
                     "  PRIMARY KEY (id)," +
                     "  UNIQUE KEY id_UNIQUE (id)" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
@@ -73,6 +76,20 @@ public class SQLTableCreationFactory {
                     "    REFERENCES role (id)" +
                     "    ON DELETE CASCADE" +
                     "    ON UPDATE CASCADE);";
+            case ORDER -> "\tCREATE TABLE IF NOT EXISTS `order` (" +
+                    "  id INT NOT NULL AUTO_INCREMENT," +
+                    "  timestamp DATETIME NOT NULL," +
+                    "  employee_id INT NOT NULL," +
+                    "  title VARCHAR(500) NOT NULL," +
+                    "  author VARCHAR(500) NOT NULL," +
+                    "  price FLOAT(5, 2) NOT NULL," +
+                    "  stock INT NOT NULL," +
+                    "  PRIMARY KEY (id)," +
+                    "  CONSTRAINT employee_id" +
+                    "   FOREIGN KEY (employee_id)" +
+                    "   REFERENCES user (id)" +
+                    "   ON DELETE CASCADE" +
+                    "   ON UPDATE CASCADE);";
             default -> "";
         };
     }

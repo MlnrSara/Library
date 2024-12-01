@@ -1,7 +1,6 @@
 package view.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 public class BookDTO {
     private StringProperty title;
@@ -36,5 +35,39 @@ public class BookDTO {
             author = new SimpleStringProperty(this, "author");
         }
         return author;
+    }
+
+    private FloatProperty price;
+
+    public void setPrice(Float price){
+        priceProperty().set(price);
+    }
+
+    public Float getPrice(){
+        return priceProperty().get();
+    }
+
+    public FloatProperty priceProperty(){
+        if (price == null) {
+            price = new SimpleFloatProperty(this, "price");
+        }
+        return price;
+    }
+
+    private IntegerProperty stock;
+
+    public void setStock(Integer stock){
+        stockProperty().set(stock);
+    }
+
+    public Integer getStock(){
+        return stockProperty().get();
+    }
+
+    public IntegerProperty stockProperty(){
+        if(stock == null){
+            stock = new SimpleIntegerProperty(this, "stock");
+        }
+        return stock;
     }
 }

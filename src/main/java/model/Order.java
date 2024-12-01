@@ -2,11 +2,12 @@ package model;
 
 import java.time.LocalDate;
 
-public class Book {
+public class Order {
     private Long id;
+    private LocalDate timestamp;
+    private Long employeeId;
     private String title;
     private String author;
-    private LocalDate publishedDate;
     private Float price;
     private Integer stock;
 
@@ -16,6 +17,14 @@ public class Book {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDate getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDate timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getTitle() {
@@ -34,14 +43,6 @@ public class Book {
         this.author = author;
     }
 
-    public LocalDate getPublishedDate() {
-        return publishedDate;
-    }
-
-    public void setPublishedDate(LocalDate publishedDate) {
-        this.publishedDate = publishedDate;
-    }
-
     public Float getPrice() {
         return price;
     }
@@ -58,8 +59,11 @@ public class Book {
         this.stock = stock;
     }
 
-    @Override
-    public String toString(){
-        return "Book " + id + " title: " + title + " author: " + author + " published: " + publishedDate;
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 }

@@ -48,11 +48,6 @@ public class UserRepositoryMySQL implements UserRepository {
         return findAllNotification;
     }
 
-    // SQL Injection Attacks should not work after fixing functions
-    // Be careful that the last character in sql injection payload is an empty space
-    // alexandru.ghiurutan95@gmail.com' and 1=1; --
-    // ' or username LIKE '%admin%'; --
-
     @Override
     public Notification<User> findByUsernameAndPassword(String username, String password) {
 
@@ -130,11 +125,10 @@ public class UserRepositoryMySQL implements UserRepository {
     @Override
     public boolean existsByUsername(String email) {
         try {
-            Statement statement = connection.createStatement();
+            PreparedStatement statement = connection.prepareStatement("Select * from `" + USER + "` where `username`= ?;");
 
-            String fetchUserSql =
-                    "Select * from `" + USER + "` where `username`=\'" + email + "\'";
-            ResultSet userResultSet = statement.executeQuery(fetchUserSql);
+            statement.setString(1, email);
+            ResultSet userResultSet = statement.executeQuery();
             return userResultSet.next();
 
         } catch (SQLException e) {
@@ -143,11 +137,48 @@ public class UserRepositoryMySQL implements UserRepository {
         }
     }
 
+    @Override
+    public User findByUsername(String username){
+        try{
+            PreparedStatement statement = connection.prepareStatement("Select * from `" + USER + "` where `username`= ?;");
+
+            statement.setString(1, username);
+            ResultSet userResultSet = statement.executeQuery();
+            if(userResultSet.next()) {
+                User user = getUserFromResultSet(userResultSet);
+                return user;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<User> findAllEmployees(){
+        try{
+            String sql = "SELECT * FROM user INNER JOIN `user_role` ON user.id = user_role.user_id WHERE user_role.role_id = 2;";
+            Statement statement = connection.createStatement();
+            ResultSet usersResultSet = statement.executeQuery(sql);
+            List<User> usersList = new ArrayList<>();
+            while (usersResultSet.next()) {
+                usersList.add(getUserFromResultSet(usersResultSet));
+            }
+            return usersList;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private User getUserFromResultSet(ResultSet resultSet) throws SQLException{
         return new UserBuilder()
                 .setUsername(resultSet.getString("username"))
                 .setPassword(resultSet.getString("password"))
                 .setRoles(rightsRolesRepository.findRolesForUser(resultSet.getLong("id")))
+                .setId(resultSet.getLong("id"))
                 .build();
     }
 

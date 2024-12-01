@@ -33,6 +33,10 @@ public class BookRepositoryMock implements BookRepository{
         return books.remove(book);
     }
 
+    public boolean update(Book book){
+        return true;
+    }
+
     @Override
     public void removeAll() {
         books.clear();

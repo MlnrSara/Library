@@ -13,6 +13,8 @@ public interface BookService {
 
     boolean delete(Book book);
 
+    boolean update(Book book);
+
     int getAgeOfBook(Long id);
 
 }

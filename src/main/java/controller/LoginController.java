@@ -1,8 +1,10 @@
 package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import launcher.AdminComponentFactory;
 import launcher.LoginComponentFactory;
 import launcher.BookComponentFactory;
+import model.Role;
 import model.User;
 import model.validator.Notification;
 import service.user.AuthenticationService;
@@ -10,6 +12,9 @@ import view.LoginView;
 
 import java.util.EventListener;
 import java.util.List;
+
+import static database.Constants.Roles.ADMINISTRATOR;
+import static database.Constants.Roles.EMPLOYEE;
 
 public class LoginController {
 
@@ -28,17 +33,23 @@ public class LoginController {
     private class LoginButtonListener implements EventHandler<ActionEvent> {
 
         @Override
-        public void handle(javafx.event.ActionEvent event) {
+        public void handle(ActionEvent event) {
             String username = loginView.getUsername();
             String password = loginView.getPassword();
 
             Notification<User> loginNotification = authenticationService.login(username, password);
+            Long userId = loginNotification.getResult().getId();
 
             if (loginNotification.hasError()){
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successful!");
-                BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                List<Role> roles = loginNotification.getResult().getRoles();
+                if(roles.get(0).getRole().equals(ADMINISTRATOR)){
+                    AdminComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                } else {
+                    BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage(), userId);
+                }
             }
         }
     }

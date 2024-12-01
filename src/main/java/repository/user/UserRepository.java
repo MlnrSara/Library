@@ -16,4 +16,8 @@ public interface UserRepository {
     void removeAll();
 
     boolean existsByUsername(String username);
+
+    User findByUsername(String username);
+
+    List<User> findAllEmployees();
 }

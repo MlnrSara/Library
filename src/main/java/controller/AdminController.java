@@ -72,7 +72,12 @@ public class AdminController {
                 }
             } else {
                 //we generate a report for just the selected employee
-
+                boolean success = reportService.generatePDFReportForEmployeeWithUsername(userDTO.getUsername());
+                if(success){
+                    adminView.addDisplayAlertMessage("Report Generated Successfully", "Finished generating the report", "You can find the report in the project files.");
+                } else {
+                    adminView.addDisplayAlertMessage("Report Generation Fail", "The report did not generate properly", "Something went wrong while generating the report. Please try again.");
+                }
             }
         }
     }

@@ -144,8 +144,12 @@ public class UserRepositoryMySQL implements UserRepository {
 
             statement.setString(1, username);
             ResultSet userResultSet = statement.executeQuery();
-            return getUserFromResultSet(userResultSet);
-
+            if(userResultSet.next()) {
+                User user = getUserFromResultSet(userResultSet);
+                return user;
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

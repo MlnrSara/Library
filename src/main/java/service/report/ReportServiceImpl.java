@@ -7,7 +7,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import model.Report;
+import model.User;
 import repository.report.ReportRepository;
+import repository.user.UserRepository;
 
 import java.io.FileOutputStream;
 import java.util.List;
@@ -16,9 +18,11 @@ import java.util.stream.Stream;
 public class ReportServiceImpl implements ReportService{
 
     private ReportRepository reportRepository;
+    private UserRepository userRepository;
 
-    public ReportServiceImpl(ReportRepository reportRepository){
+    public ReportServiceImpl(ReportRepository reportRepository, UserRepository userRepository){
         this.reportRepository = reportRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -45,7 +49,25 @@ public class ReportServiceImpl implements ReportService{
 
     @Override
     public boolean generatePDFReportForEmployeeWithUsername(String username) {
-        return false;
+        User user = userRepository.findByUsername(username);
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream("oneEmployeeReport.pdf"));
+
+            document.open();
+            List<Report> reports = reportRepository.findAllByEmployee(user);
+            PdfPTable table = new PdfPTable(6);
+            addTableHeader(table);
+            addRows(table, reports);
+
+            document.add(table);
+            document.close();
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private void addTableHeader(PdfPTable table) {

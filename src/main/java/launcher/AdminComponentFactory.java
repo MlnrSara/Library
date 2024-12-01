@@ -48,7 +48,7 @@ public class AdminComponentFactory {
         this.userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
         this.employeeService = new EmployeeServiceMySQL(userRepository, rightsRolesRepository);
         this.reportRepository = new ReportRepositoryMySQL(connection);
-        this.reportService = new ReportServiceImpl(reportRepository);
+        this.reportService = new ReportServiceImpl(reportRepository, userRepository);
 
         List<UserDTO> userDTOs = UserMapper.convertUserListToUserDTOList(employeeService.findAllEmployees());
         this.adminView = new AdminView(primaryStage, userDTOs);

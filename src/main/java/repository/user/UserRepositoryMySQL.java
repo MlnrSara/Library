@@ -125,16 +125,47 @@ public class UserRepositoryMySQL implements UserRepository {
     @Override
     public boolean existsByUsername(String email) {
         try {
-            Statement statement = connection.createStatement();
+            PreparedStatement statement = connection.prepareStatement("Select * from `" + USER + "` where `username`= ?;");
 
-            String fetchUserSql =
-                    "Select * from `" + USER + "` where `username`=\'" + email + "\'";
-            ResultSet userResultSet = statement.executeQuery(fetchUserSql);
+            statement.setString(1, email);
+            ResultSet userResultSet = statement.executeQuery();
             return userResultSet.next();
 
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    @Override
+    public User findByUsername(String username){
+        try{
+            PreparedStatement statement = connection.prepareStatement("Select * from `" + USER + "` where `username`= ?;");
+
+            statement.setString(1, username);
+            ResultSet userResultSet = statement.executeQuery();
+            return getUserFromResultSet(userResultSet);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<User> findAllEmployees(){
+        try{
+            String sql = "SELECT * FROM user INNER JOIN `user_role` ON user.id = user_role.user_id WHERE user_role.role_id = 2;";
+            Statement statement = connection.createStatement();
+            ResultSet usersResultSet = statement.executeQuery(sql);
+            List<User> usersList = new ArrayList<>();
+            while (usersResultSet.next()) {
+                usersList.add(getUserFromResultSet(usersResultSet));
+            }
+            return usersList;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return null;
         }
     }
 

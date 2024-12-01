@@ -1,8 +1,10 @@
 package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import launcher.AdminComponentFactory;
 import launcher.LoginComponentFactory;
 import launcher.BookComponentFactory;
+import model.Role;
 import model.User;
 import model.validator.Notification;
 import service.user.AuthenticationService;
@@ -10,6 +12,9 @@ import view.LoginView;
 
 import java.util.EventListener;
 import java.util.List;
+
+import static database.Constants.Roles.ADMINISTRATOR;
+import static database.Constants.Roles.EMPLOYEE;
 
 public class LoginController {
 
@@ -39,7 +44,12 @@ public class LoginController {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successful!");
-                BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage(), userId);
+                List<Role> roles = loginNotification.getResult().getRoles();
+                if(roles.get(0).getRole().equals(ADMINISTRATOR)){
+                    AdminComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                } else {
+                    BookComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage(), userId);
+                }
             }
         }
     }

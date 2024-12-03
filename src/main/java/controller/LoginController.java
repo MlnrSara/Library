@@ -7,14 +7,13 @@ import launcher.BookComponentFactory;
 import model.Role;
 import model.User;
 import model.validator.Notification;
+import model.validator.ResultFetchException;
 import service.user.AuthenticationService;
 import view.LoginView;
 
-import java.util.EventListener;
 import java.util.List;
 
 import static database.Constants.Roles.ADMINISTRATOR;
-import static database.Constants.Roles.EMPLOYEE;
 
 public class LoginController {
 
@@ -38,7 +37,12 @@ public class LoginController {
             String password = loginView.getPassword();
 
             Notification<User> loginNotification = authenticationService.login(username, password);
-            Long userId = loginNotification.getResult().getId();
+            Long userId = 0L;
+            try {
+                userId = loginNotification.getResult().getId();
+            } catch (ResultFetchException ignored){
+
+            }
 
             if (loginNotification.hasError()){
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());

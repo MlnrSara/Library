@@ -46,10 +46,13 @@ public class AdminController {
                     UserDTO userDTO = new UserDTO(username);
                     Notification<Boolean> addedEmployee = employeeService.save(username, password);
                     try {
-                        addedEmployee.getResult();
-                        adminView.addDisplayAlertMessage("Add Successful", "Employee added", "Employee was successfully added to the database.");
-                        adminView.addEmployeeToObservableList(userDTO);
-                    } catch (ResultFetchException e) {
+                        if (addedEmployee.getResult()) {
+                            adminView.addDisplayAlertMessage("Add Successful", "Employee added", "Employee was successfully added to the database.");
+                            adminView.addEmployeeToObservableList(userDTO);
+                        } else {
+                            adminView.addDisplayAlertMessage("Add Error", "Problem at adding employee", "Employee already exists");
+                        }
+                    } catch (ResultFetchException e){
                         String errors = addedEmployee.getFormattedErrors();
                         adminView.addDisplayAlertMessage("Add Error", "Problem at adding employee", errors);
                     }
